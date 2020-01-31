@@ -7,6 +7,6 @@ txt = open(FILE)
 
 LI_SUDOKU = parse(txt)
 
-for i in range(1):
+for i in range(100):
     sudoku1 = Sudoku(LI_SUDOKU[i])
-    sudoku1.solve_cdcl()
+    assert sudoku1.solve_cdcl() == sudoku1.solve_minisat()

@@ -19,6 +19,6 @@ void print_valuation(Stack* s,char* out){
     fprintf(f,"%s ",var->name);
     s2 = s2->next;
   }
-  fprintf(f,"0");
+  fprintf(f,"0\n");
   fclose(f);
 }

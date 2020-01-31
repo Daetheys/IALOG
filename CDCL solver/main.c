@@ -5,7 +5,8 @@
 int main(int argc, char** argv){ //Call the program like ./main input_file output_file
   printf("running main\n");
   Logics* l = parse_file(argv[1]);
-  print_logics(l);
+  printf("parsed file\n");
+  //print_logics(l);
   Stack* s = cdcl(l);
   if (s==NULL){
     printf("no solution\n");

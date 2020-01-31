@@ -16,7 +16,8 @@ Literal* get_literal(Logics* l){
     Literal* lit = (Literal*)ret[0];
     int count_undecided = (int)ret[1];
     int count_true = (int)ret[2];
-    if (count_true==0 && count_undecided > 0){
+    free(ret);
+    if (count_undecided > 0){
       return lit;
     }
     s = s->next;
@@ -32,6 +33,7 @@ int deduce(Logics* l,Stack* s){ //Try to find values of new variables by propaga
     Literal* lit = (Literal*)ret[0];
     int count_undecided = (int)ret[1];
     int count_true = (int)ret[2];
+    free(ret);
     if (count_undecided == 1 && count_true == 0){ //If all are false and one undecided -> set it to true
       Var* v = (Var*)(lit->var);
       v->val = val_to_true(lit);
@@ -49,10 +51,12 @@ int deduce(Logics* l,Stack* s){ //Try to find values of new variables by propaga
 int backtrack(Stack* s){
   while (s->next != NULL){
     Var* v = pop(s);
+    //printf("backtrack-%d\n",s->length);
     if (v->decide){
       v->val = 1-v->val;
+      v->decide = 0;
       append(s,v);
-      return 0;
+      return 1;
     }
     v->val = -1;
   }
@@ -62,8 +66,11 @@ int backtrack(Stack* s){
 int step_deduce(Logics* l,Stack* s){
   print("_START DEDUCE_");
   while (1){
-    print("LOOP DEDUCE");
+    //print("LOOP DEDUCE");
     int ret = deduce(l,s);
+    //printf("deduce-%d\n",s->length);
+    print("right after deduce");
+    print_var_stack(s);
     if (ret){
       print("CONFLICT FOUND - BACKTRACK");
       int ret2 = backtrack(s); //Conflict
@@ -79,17 +86,30 @@ int step_deduce(Logics* l,Stack* s){
   return 0;
 }
 
+void print_var_stack(Stack* s){
+  if (DEBUG){
+    Stack* s2 = s;
+    printf("STACK:\n");
+    while (s2->next != NULL){
+      Var* var = s2->e;
+      print_var(var);
+      s2 = s2->next;
+    }
+  }
+}
+
 Stack* cdcl(Logics* l){ //Returns the valuation in a Stack or a NULL pointer if not satisfiable
   Stack* s = empty_stack(); //Stack for variables
   print("_____CDCL_____");
   if (DEBUG){
-    print_logics(l);
+    //print_logics(l);
   }
   step_deduce(l,s); //Handles unitary clauses
   while (1){
     print("--loop step");
+    print_var_stack(s);
     if (DEBUG){
-      print_logics(l);
+      //print_logics(l);
     }
     Literal* lit = get_literal(l);
     if (lit == NULL){
@@ -108,6 +128,8 @@ Stack* cdcl(Logics* l){ //Returns the valuation in a Stack or a NULL pointer if 
       }
       append(s,v);
       int ret = step_deduce(l,s); //deduce and backtracks if necessary
+      print("-after deduce\n");
+      print_var_stack(s);
       if (ret){
 	return NULL; //Unsatifiable
       }

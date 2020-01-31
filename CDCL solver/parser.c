@@ -3,7 +3,7 @@
 #include <string.h>
 //#include "logics.h"
 #include "parser.h"
-#define MAXLENGTH 1024
+#define MAXLENGTH 1024*100
 #define DEBUG 0
 
 void debug(char* txt){
@@ -19,7 +19,9 @@ Literal* parse_char(char* c,Var** vars){
     type = 1;
     c++;
   }
+  debug("      atoing");
   int index = atoi(c);
+  debug("      atoied");
   Literal* lit = create_literal(vars[index-1]);
   lit->type = type;
   debug("      parsed char");
@@ -35,7 +37,9 @@ Clause* parse_line(char* line,Var** vars){
     debug("   loop parse char");
     Literal* lit = parse_char(strdup(ptr),vars);
     append(c->literals,lit);
+    debug("pretok");
     ptr = strtok(NULL,delim);
+    debug("posttok");
   }
   debug("   parsed line");
   return c;

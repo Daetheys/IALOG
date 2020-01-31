@@ -44,9 +44,9 @@ class Sudoku:
         f_solution.close()
         if sat:
             self.parse_solution(solution)
-            print(self)
+            return str(self)
         else:
-            print("NO SOLUTION")
+            return "NO SOLUTION"
 
     def solve_cdcl(self):
         request_file = "__tmp_request__.dimacs"
@@ -62,9 +62,9 @@ class Sudoku:
         f_solution.close()
         if sat:
             self.parse_solution(solution)
-            print(self)
+            return str(self)
         else:
-            print("NO SOLUTION")
+            return "NO SOLUTION"
 
     def parse_solution(self,s):
         l_true = s.split(" ")[:-1] #On enleve le dernier car c'est le 0 du format
