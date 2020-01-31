@@ -1,0 +1,10 @@
+int test_create_var();
+int test_create_literal();
+int test_evaluate_literal();
+int test_val_to_true();
+int test_create_clause();
+int test_create_clause_from_list();
+int test_get_variable_from_clause();
+int test_evaluate_clause();
+int test_create_logics();
+int test_create_logics_from_list();
